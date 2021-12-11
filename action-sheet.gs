@@ -1,27 +1,33 @@
-const spreadSheetPage = SpreadsheetApp.openById(spreadSheetId);
+class DataSource {
+    #spreadSheetPage
 
-function pageNameFor(date) {
-    return `${date.getFullYear()}/${date.getMonth()}`
-}
+    constructor(spreadSheetId) {
+        this.#spreadSheetPage = SpreadsheetApp.openById(spreadSheetId)
+    }
 
-function getSheetFor(date) {
-    return spreadSheetPage.getSheetByName(pageNameFor(date))
-}
+    #pageNameFor(date) {
+        return `${date.getFullYear()}/${date.getMonth()}`
+    }
 
-function getRangeFor(date) {
-    const sheet = getSheetFor(date)
-    if(!sheet) { return null }
-    return sheet.getRange(`A${date.getDate()}`)
-}
+    #getSheetFor(date) {
+        return this.#spreadSheetPage.getSheetByName(this.#pageNameFor(date))
+    }
 
-function getValueOf(date) {
-    const sheet = getSheetFor(date)
-    if(!sheet) { return 0 }
-    return getRangeFor(date).getDisplayValue() || 0
-}
+    #getRangeFor(date) {
+        const sheet = this.#getSheetFor(date)
+        if(!sheet) { return null }
+        return sheet.getRange(`A${date.getDate()}`)
+    }
 
-function setValue(date, value) {
-    const sheet = getSheetFor(date) ?? spreadSheetPage.insertSheet(pageNameFor(date));
-    // todo: error handling in case the sheet is null
-    getRangeFor(date).setValue(value)
+    getValueOf(date) {
+        const sheet = this.#getSheetFor(date)
+        if(!sheet) { return 0 }
+        return this.#getRangeFor(date).getDisplayValue() || 0
+    }
+
+    setValue(date, value) {
+        const sheet = this.#getSheetFor(date) ?? this.#spreadSheetPage.insertSheet(this.#pageNameFor(date));
+        // todo: error handling in case the sheet is null
+        this.#getRangeFor(date).setValue(value)
+    }
 }
