@@ -6,10 +6,10 @@ function doPost(arg) {
     const userMessage = json.events[0].message.text
 
     const dataSource = new DataSource(spreadSheetId)
-    const now = new Date()
-    const currentMilkMount = dataSource.getValueOf(now)
+    const jstNow = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000))
+    const currentMilkMount = dataSource.getValueOf(jstNow)
     const newValue = parseInt(userMessage) + currentMilkMount
-    dataSource.setValue(now, newValue)
+    dataSource.setValue(jstNow, newValue)
 
     const reply_message = `total: ${newValue}ml\nhttps://docs.google.com/spreadsheets/d/${spreadSheetId}`
     const message = { "type": "text", "text": reply_message }
