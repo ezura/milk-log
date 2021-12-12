@@ -21,7 +21,7 @@ class DataSource {
     getValueOf(date) {
         const sheet = this._getSheetFor(date)
         if(!sheet) { return 0 }
-        return this._getRangeFor(date).getDisplayValue() || 0
+        return parseInt(this._getRangeFor(date).getDisplayValue()) || 0
     }
 
     setValue(date, value) {
